@@ -7,7 +7,7 @@
 package de.dfki.asr.atlas.convert;
 
 import de.dfki.asr.atlas.cdi.annotations.AtlasExporter;
-import de.dfki.asr.atlas.model.Asset;
+import de.dfki.asr.atlas.model.ArrayMatrix4f;
 import de.dfki.asr.atlas.model.Folder;
 import de.dfki.asr.atlas.model.ListingFolder;
 
@@ -50,6 +50,11 @@ public class SubassetListingExporter implements ExportOperation<ListingFolder>{
 		ListingFolder subasset = new ListingFolder();
 		subasset.setName(folder.getName());
 		subasset.setUrl(buildURLForFolder(folder));
+		subasset.setTransform(readLocalTransform(folder));
 		return subasset;
+	}
+
+	private ArrayMatrix4f readLocalTransform(Folder folder) {
+		return ExporterUtils.readTransform(folder, "transform", context);
 	}
 }
