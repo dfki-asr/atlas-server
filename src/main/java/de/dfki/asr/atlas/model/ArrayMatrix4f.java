@@ -33,7 +33,7 @@ public class ArrayMatrix4f extends Matrix4f {
 
 	}
 
-	public List<Float> asList() {
+	public List<Float> asListColumnMajor() {
 		List<Float> list = new ArrayList<>();
 		for (int i = 0; i < 16; i++) {
 			list.add(getElement(i % 4, i / 4));
