@@ -14,12 +14,10 @@ import de.dfki.asr.atlas.model.ListingFolder;
 @AtlasExporter(contentType = "application/json", fileExtension = ".json", folderTypes = {"node"})
 public class SubassetListingExporter implements ExportOperation<ListingFolder>{
 
-	private Asset currentAsset;
 	private ExportContext context;
 
 	@Override
 	public ListingFolder export(ExportContext context) {
-		currentAsset = context.getSourceAsset();
 		this.context = context;
 		Folder root = context.getStartingFolder();
 		ListingFolder assetListing = createListingFromFolder(root);
