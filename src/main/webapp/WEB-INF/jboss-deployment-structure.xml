@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ This file is part of ATLAS. It is subject to the license terms in
+ the LICENSE file found in the top-level directory of this distribution.
+ (Also avialable at http://www.apache.org/licenses/LICENSE-2.0.txt)
+ You may not use this file except in compliance with the License.
+-->
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
+	<deployment>
+		<dependencies>
+			<module name="javax.jcr"/>
+			<module name="org.modeshape.jcr.api" services="import"/>
+			<module name="org.modeshape" services="import"/>
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure>

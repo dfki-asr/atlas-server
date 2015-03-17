@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--
+ This file is part of ATLAS. It is subject to the license terms in
+ the LICENSE file found in the top-level directory of this distribution.
+ (Also avialable at http://www.apache.org/licenses/LICENSE-2.0.txt)
+ You may not use this file except in compliance with the License.
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Asset Viewer</title>
+
+		<!-- CSS -->
+		<link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+		<link href="css/style.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1">
+					<div class="page-header">
+						<h2>
+							Atlas
+							<small>
+								Carrying the weight of your assets
+							</small>
+						</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="margin-bottom: 30px;">
+				<div class="col-md-8 col-md-offset-2">
+					<ul class="nav nav-tabs nav-justified" role="tablist">
+						<li class="active"><a href="#">Assets</a></li>
+						<li><a href="upload.html">Upload</a></li>
+						<li><a href="help.html">Help</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+					<blockquote class="blockquote-reverse blockquote-borderColor">
+						<p>
+							<span class="large-highlight">A</span>dvanced
+							 <span class="large-highlight">T</span>hree-dimensional
+							 <span class="large-highlight">L</span>arge-scale
+							 <span class="large-highlight">A</span>sset
+							 <span class="large-highlight">S</span>erver
+						</p>
+						<footer>ATLAS</footer>
+					</blockquote>
+					<ul class="list-group" id="asset-list">
+						<li class="list-group-item large-highlight">Available Assets</li>
+						<!-- Filled automatically -->
+					</ul>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1 text-center footer">
+				</div>
+			</div>
+		</div>
+
+		<!-- templates -->
+		<script id="asset-list-entry-template" type="text/x-handlebars-template">
+			<li class="list-group-item">{{assetname}}
+				<div class="pull-right" style="margin-top: -5px;">
+					<a role="button" class="btn btn-default" href="assetviewer.html?asset-name={{assetname}}">
+						<span class="glyphicon glyphicon-eye-open"></span> Show Online
+						</a>
+						<div class="dropdown" style="display: inline">
+							<button type="button" id="download-dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-cloud-download"></span> Download as...
+							</button>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="download-dropdown">
+								<li role="presentation">
+									<a role="menuitem" tabindex="-1" href="rest/asset/{{assetname}}.zip">Collada</a>
+								</li>
+								<li role="presentation">
+									<a role="menuitem" tabindex="-1" href="rest/asset/{{assetname}}.xml">XML3D</a>
+								</li>
+							</ul>
+						</div>
+						</div>
+			</li>
+		</script>
+	</body>
+
+	<!-- Script Libs-->
+	<script src="js/lib/jquery-2.1.1/jquery-2.1.1.js"></script>
+	<script src="js/lib/bootstrap-3.2.0/bootstrap.js"></script>
+	<script src="js/lib/handlebars-1.0.0/handlebars-1.0.0.js"></script>
+	<!-- Our Scripts -->
+	<script src="js/assetApp.js"></script>
+</html>

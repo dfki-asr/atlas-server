@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--
+ This file is part of ATLAS. It is subject to the license terms in
+ the LICENSE file found in the top-level directory of this distribution.
+ (Also avialable at http://www.apache.org/licenses/LICENSE-2.0.txt)
+ You may not use this file except in compliance with the License.
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Asset Viewer</title>
+
+		<!-- CSS -->
+		<link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+		<link href="css/style.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1">
+					<div class="page-header">
+						<h2>
+							Atlas
+							<small>
+								Carrying the weight of your assets
+							</small>
+						</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="margin-bottom: 30px;">
+				<div class="col-md-8 col-md-offset-2">
+					<ul class="nav nav-tabs nav-justified" role="tablist">
+						<li><a href="index.html">Assets</a></li>
+						<li class="active"><a href="#">Upload</a></li>
+						<li><a href="help.html">Help</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="row" style="margin-bottom: 20px;">
+				<div class="col-md-10 col-md-offset-1 text-center">
+					See the <a href="help.html">Help</a> page for more information about supported file types and limitations.
+				</div>
+			</div>
+			<div class="row">
+				<form class="form-inline text-center">
+					<div class="form-group">
+						<input id="asset_name_input" type="text" class="form-control bg-success input-sm" placeholder="Asset name">
+					</div>
+					<div class="form-group">
+						<span class="btn btn-default btn-file">
+							<span class="glyphicon glyphicon-list"></span> Browse
+							<input id="file_upload_form" type="file">
+							<span class="label label-warning" id="file_upload_label">No file</span>
+						</span>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-default" type="button" id="upload_button" disabled>
+							<span class="glyphicon glyphicon-cloud-upload"></span> Upload
+						</button>
+					</div>
+					<div class="form-group">
+						<div id="status-container" class="color-processing hidden">
+							<span id="status-text">Uploading</span>
+							<span class="glyphicon glyphicon-retweet" id="status-icon" style="margin-left: 5px;"></span>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1 text-center footer">
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<!-- Script Libs-->
+	<script src="js/lib/jquery-2.1.1/jquery-2.1.1.js"></script>
+	<script src="js/lib/bootstrap-3.2.0/bootstrap.js"></script>
+	<!-- Our Scripts -->
+	<script src="js/asset-upload.js"></script>
+</html>

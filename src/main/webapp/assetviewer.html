@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--
+ This file is part of ATLAS. It is subject to the license terms in
+ the LICENSE file found in the top-level directory of this distribution.
+ (Also avialable at http://www.apache.org/licenses/LICENSE-2.0.txt)
+ You may not use this file except in compliance with the License.
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Asset Viewer</title>
+
+		<!-- CSS -->
+		<link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+		<link href="css/style.css" type="text/css" rel="stylesheet">
+		<link href="css/assetviewer.css" type="text/css" rel="stylesheet">
+		<link href="css/xml3d.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="page-header" id="info-header">
+			<h2>
+				<span id="asset-name"></span>
+				<small class="asset-stats">
+					Visible Objects: <span id="asset-stats-objects"></span>
+				</small>
+				<small class="asset-stats">
+					Visible Faces: <span id="asset-stats-faces"></span>
+				</small>
+			</h2>
+		</div>
+		<div id="xml3d_spinnerContainer">
+			<div id="xml3d_spinner" class="spinner"></div>
+			<div>Loading 3D Content ...</div>
+		</div>
+		<div class="xml3d_container xml3d_hidden">
+			<xml3d id="xml3dmain" activeView="#Camera" style="width: 100%; height: 100%; background-color:#f8f8f8;" xmlns="http://www.xml3d.org/2009/xml3d">
+				<defs>
+				<lightshader id="ls_Lamp1" script="urn:xml3d:lightshader:directional">
+					<float3 name="attenuation">
+						1.00000 0 0.000000
+					</float3>
+					<float3 name="intensity">
+						1.2 1.2 1.2
+					</float3>
+				</lightshader>
+
+				<lightshader id="ls_Lamp2" script="urn:xml3d:lightshader:directional">
+					<float3 name="attenuation">
+						1.00000 0 0.000000
+					</float3>
+				<float3 name="intensity">
+					1.2 1.2 1.2
+				</float3>
+				</lightshader>
+				<lightshader id="ls_Lamp3" script="urn:xml3d:lightshader:directional">
+					<float3 name="attenuation">
+						1.00000 0 0.000000
+					</float3>
+					<float3 name="intensity">
+						1.2 1.2 1.2
+					</float3>
+				</lightshader>
+
+			<shader id="asset-shader" script="urn:xml3d:shader:phong">
+				<float3 name="diffuseColor">0 0 1</float3>
+			</shader>
+
+			<transform id="t_Camera" rotation="0 0 0 1" scale="1.000000 1.000000 1.000000" translation="0 0 10"></transform>
+			<transform id="t_Lamp1" translation="5 10 0" rotation="0 1 0 1.57"></transform>
+			<transform id="t_Lamp2" translation="-5 10 0" rotation="0 1 0 -1.57"></transform>
+			<transform id="t_Lamp3" translation="-5 10 0" rotation="0 1 0 -1.57"></transform>
+			<transform id="t_asset" scale="1.000000 1.000000 1.000000" translation="0 0 0"></transform>
+			</defs>
+
+			<group id="asset-group" transform="#t_asset" shader="#asset-shader">
+				<model id="asset-model" src="resources/dummy_asset.xml#dummy"></model>
+			</group>
+			<group transform="#t_Lamp1">
+				<light shader="#ls_Lamp1"></light>
+			</group>
+			<group transform="#t_Lamp2">
+				<light shader="#ls_Lamp2"></light>
+			</group>
+			<group transform="#t_Lamp3">
+				<light shader="#ls_Lamp3"></light>
+			</group>
+
+			<group id="camera_group" transform="#t_Camera">
+				<view id="Camera" position="0.000000 0.000000 0.00000"></view>
+			</group>
+		</xml3d>
+		</div>
+	</body>
+
+	<!-- Script Libs-->
+	<script src="js/lib/jquery-2.1.1/jquery-2.1.1.js"></script>
+	<script src="js/lib/bootstrap-3.2.0/bootstrap.js"></script>
+	<script src="js/lib/xml3d-4.5/xml3d.js"></script>
+	<script src="js/lib/xml3d-tools-0.2/xml3d.tools.js"></script>
+	<script src="js/lib/spin.js-2014-07-15/spin.js"></script>
+
+	<!-- Our Scripts -->
+	<script src="js/asset-viewer.js"></script>
+	<script src="js/spinner.js"></script>
+
+</html>
