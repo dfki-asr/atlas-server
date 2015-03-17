@@ -1,0 +1,231 @@
+Setting up the container
+===================
+
+Currently, we support [WildFly](http://www.wildfly.org) as container only.
+JavaEE portability is a difficult terrain, and we do not have the resources to manoeuvre around this.
+We're sorry for the inconvenience.
+
+Download and extract WildFly
+----------------------------
+
+Download the most recent version of [Wildfly](http://www.wildfly.org) and extract the archive to a folder on your disk.
+
+### Set up a management user
+
+In order to manage the server via the web interface, add a new user via the wildfly CLI, as follows.
+Execute the `add-user` script from the `bin` folder, and feed it the following answers:
+
+* __Type:__ Management user
+* __Name:__ (the username you want to use for the web admin panel)
+* __Password:__ (some safe password)
+* __Groups:__ (leave empty)
+* __Used to connect to another process:__ no
+
+### Set up a user for Messaging
+
+ATLAS' import worker connects to the container through HornetQ's STOMP interface.
+Since this requires authentication, you need to add another user using the `add-user` script:
+
+* __Type:__ Application user
+* __Name:__ (the username you want to use for STOMP)
+* __Password:__ (some safe password)
+* __Groups:__ guest
+
+Note: if you are going to use COMPASS along with ATLAS, you might want to use the stomp user created for COMPASS for ATLAS as well.
+
+Install modeshape
+-------------------
+
+To store asset data, ATLAS uses the JCR (Java Content Repository) interface.
+Follow the instructions for [installing](https://docs.jboss.org/author/display/MODE40/Installing+ModeShape+into+Wildfly) and [configuring](https://docs.jboss.org/author/display/MODE40/Configuring+ModeShape+in+Wildfly) modeshape in wildfly.
+
+### Add modeshape user configuration
+
+In the `standalone/configuration` folder, add a file `modeshape-roles.properties`, containing the following user role properties:
+
+	#<userName>=[readonly[.<workspaceName>] | readwrite[.<workspaceName>]][, [readonly[.<workspaceName>] | readwrite[.<workspaceName>]]]*
+	admin=admin,connect,readonly,readwrite
+	guest=connect,readonly
+
+
+Analogously, create `modeshape-users.properties`, containing
+
+	# A users.properties file for use with the UsersRolesLoginModule
+	# username=password
+	admin=admin
+	guest=guest
+
+### Configure cache containers
+
+Add the necessary *cache containers* for atlas in the infinispan subsystem defined in the `standalone.xml`:
+
+	<cache-container name="modeshape" default-cache="data" module="org.modeshape">
+		<local-cache name="atlas">
+			<locking isolation="READ_COMMITTED"/>
+			<transaction mode="NON_XA"/>
+			<file-store passivation="false" purge="false" path="modeshape/store/atlas"/>
+		</local-cache>
+		<local-cache name="artifacts">
+			<locking isolation="READ_COMMITTED"/>
+			<transaction mode="NON_XA"/>
+			<file-store passivation="false" purge="false" path="modeshape/store/artifacts"/>
+		</local-cache>
+	</cache-container>
+
+
+### Setting up the security domain
+
+Make sure the *security domain* you added while installing modeshape contains all necessary entries:
+
+	<security-domain name="modeshape-security" cache-type="default">
+		<authentication>
+			<login-module code="UsersRoles" flag="required">
+				<module-option name="usersProperties" value="${jboss.server.config.dir}/modeshape-users.properties"/>
+				<module-option name="rolesProperties" value="${jboss.server.config.dir}/modeshape-roles.properties"/>
+			</login-module>
+		</authentication>
+	</security-domain>
+
+
+Messaging configuration
+------------------------------
+
+The messaging service makes use of the jboss messaging submodule. If you haven't configured this module yet, e.g. when setting up another project, do this as a first step before adding the ATLAS jms destinations. 
+
+### Setting up the messaging submodule
+
+Most of the configuration can be found in WildFly's `standalone-full.xml` example file, here we'll highlight the core elements necessary to allow ATLAS to communicate with the worker.
+
+Add the module for the messaging service to the list of extension modules:
+
+	<extension module="org.jboss.as.messaging"/>
+
+
+Add the Message-Driven Bean (MDB) resource adapter to the ejb subsystem:
+
+	<mdb>
+		<resource-adapter-ref resource-adapter-name="${ejb.resource-adapter-name:hornetq-ra.rar}"/>
+		<bean-instance-pool-ref pool-name="mdb-strict-max-pool"/>
+	</mdb>
+
+
+Finally, add a new subsystem for HornetQ using the following settings (note the `<connector>` and `<acceptor>` tags for STOMP, the rest is pretty much copied and pasted from `standalone-full.xml`):
+
+	<subsystem xmlns="urn:jboss:domain:messaging:2.0">
+		<hornetq-server>
+			<journal-file-size>102400</journal-file-size>
+			<connectors>
+				<http-connector name="http-connector" socket-binding="http">
+					<param key="http-upgrade-endpoint" value="http-acceptor"/>
+				</http-connector>
+				<http-connector name="http-connector-throughput" socket-binding="http">
+					<param key="http-upgrade-endpoint" value="http-acceptor-throughput"/>
+					<param key="batch-delay" value="50"/>
+				</http-connector>
+				<in-vm-connector name="in-vm" server-id="0"/>
+				<connector name="netty-connector">
+					<factory-class>org.hornetq.core.remoting.impl.netty.NettyConnectorFactory</factory-class>
+				</connector>
+			</connectors>
+			<acceptors>
+				<http-acceptor http-listener="default" name="http-acceptor"/>
+				<http-acceptor http-listener="default" name="http-acceptor-throughput">
+					<param key="batch-delay" value="50"/>
+					<param key="direct-deliver" value="false"/>
+				</http-acceptor>
+				<in-vm-acceptor name="in-vm" server-id="0"/>
+				<acceptor name="stomp-websocket">
+					<factory-class>org.hornetq.core.remoting.impl.netty.NettyAcceptorFactory</factory-class>
+					<param key="host" value="0.0.0.0"/>
+					<param key="port" value="61614"/>
+				</acceptor>
+				<acceptor name="stomp">
+					<factory-class>org.hornetq.core.remoting.impl.netty.NettyAcceptorFactory</factory-class>
+					<param key="host" value="0.0.0.0"/>
+					<param key="port" value="61613"/>
+				</acceptor>
+			</acceptors>
+			<security-settings>
+				<security-setting match="#">
+					<permission type="send" roles="guest"/>
+					<permission type="consume" roles="guest"/>
+					<permission type="createNonDurableQueue" roles="guest"/>
+					<permission type="deleteNonDurableQueue" roles="guest"/>
+				</security-setting>
+			</security-settings>
+			<address-settings>
+				<address-setting match="#">
+					<dead-letter-address>jms.queue.DLQ</dead-letter-address>
+					<expiry-address>jms.queue.ExpiryQueue</expiry-address>
+					<max-size-bytes>10485760</max-size-bytes>
+					<page-size-bytes>2097152</page-size-bytes>
+					<message-counter-history-day-limit>10</message-counter-history-day-limit>
+				</address-setting>
+			</address-settings>
+			<jms-connection-factories>
+				<connection-factory name="InVmConnectionFactory">
+					<connectors>
+						<connector-ref connector-name="in-vm"/>
+					</connectors>
+					<entries>
+						<entry name="java:/ConnectionFactory"/>
+					</entries>
+				</connection-factory>
+				<connection-factory name="RemoteConnectionFactory">
+					<connectors>
+						<connector-ref connector-name="http-connector"/>
+					</connectors>
+					<entries>
+						<entry name="java:jboss/exported/jms/RemoteConnectionFactory"/>
+					</entries>
+				</connection-factory>
+				<pooled-connection-factory name="hornetq-ra">
+					<transaction mode="xa"/>
+					<connectors>
+						<connector-ref connector-name="in-vm"/>
+					</connectors>
+					<entries>
+						<entry name="java:/JmsXA"/>
+						<entry name="java:jboss/DefaultJMSConnectionFactory"/>
+					</entries>
+				</pooled-connection-factory>
+			</jms-connection-factories>
+			<jms-destinations>
+				<jms-queue name="ExpiryQueue">
+					<entry name="java:/jms/queue/ExpiryQueue"/>
+				</jms-queue>
+				<jms-queue name="DLQ">
+					<entry name="java:/jms/queue/DLQ"/>
+				</jms-queue>
+			</jms-destinations>
+		</hornetq-server>
+	</subsystem>
+
+
+### Add ATLAS jms queues
+
+Add the ATLAS jms destinations to the JMS destinations of the HornetQ messaging subsystems `<jms-destinations>` tag defined (as per the example above) in `standalone.xml`:
+
+	<jms-queue name="atlas.work.import">
+		<entry name="queue/atlas/work/import"/>
+		<entry name="/queue/atlas.work.import"/>
+		<entry name="java:/jms/queue/atlas/work/import"/>
+	</jms-queue>
+	<jms-queue name="atlas.work.feedback">
+		<entry name="queue/atlas/work/feedback"/>
+		<entry name="/queue/atlas.work.feedback"/>
+		<entry name="java:/jms/queue/atlas/work/feedback"/>
+	</jms-queue>
+
+
+Increasing the memory limit
+-----------------------------
+
+To increase the amount of memory available for ATLAS, open the configuration file `bin/standalone.conf` located in you WildFly installation's . Go to the the options to be passed to the Java VM.
+The memory maximum can be adjusted in the line
+
+	JAVA_OPTS="-Xms64m -Xmx512m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true"
+
+by increasing the `-Xmx`, `-Xms` and `-XX:MaxPermSize`  value.
+
+Since ATLAS probably needs to serialise large amounts of binary data to text, which requires a decent amount of memory, you are encouraged to adjust the default values. At any rate, the container log will tell you when you run out of memory.

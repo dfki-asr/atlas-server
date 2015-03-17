@@ -1,0 +1,104 @@
+.blockquote-borderColor{
+    border-color: #449d44 !important;
+}
+
+.blockquote-small-font{
+    font-size: inherit;
+}
+
+.bright-green{
+    color: #449d44 !important;
+}
+
+a{
+    color: #449d44;
+}
+
+a:hover{
+    color: #449d44;
+}
+
+.noMarginTop{
+    margin-top: 0px !important;
+}
+
+p.lead{
+    margin-top: 20px;
+    color: #449d44 !important;
+	font-size: 18px;
+}
+
+.footer{
+	border-top: 1px solid gainsboro;
+	margin-top: 25px;
+	margin-bottom: 25px;
+	padding-top: 5px;
+}
+
+h2{
+	color: #449d44;
+}
+
+h5{
+	font-weight: bold;
+}
+.input-success {
+	border-color: #449d44;
+}
+
+.input-fail {
+	border-color: orangered;
+}
+
+.btn-default{
+	border-color: #449d44;
+	color: #449d44;
+	padding: 4px 12px;
+}
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-success {
+	color: #fff;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+#asset_name_input {
+	width: 20em;
+}
+
+.large-highlight{
+	font-size: 120%;
+	color: #449d44;
+}
+
+.color-processing{
+	color: #66afe9;
+}
+
+.color-success{
+	color: #449d44;
+}
+
+.color-failure{
+	color: orangered;
+}
+
+#status-container{
+	padding: 6px 12px;
+	white-space: nowrap;
+}

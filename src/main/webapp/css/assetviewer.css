@@ -1,0 +1,47 @@
+/*
+ * This file is part of ATLAS. It is subject to the license terms in
+ * the LICENSE file found in the top-level directory of this distribution.
+ * (Also avialable at http://www.apache.org/licenses/LICENSE-2.0.txt)
+ * You may not use this file except in compliance with the License.
+ */
+
+#xml3d_spinnerContainer{
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	height: 600px;
+}
+
+.xml3d_container {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+.spinner{
+    height: 240px;
+}
+
+#info-header {
+	position: absolute;
+	width: 100%;
+	padding-left: 20px;
+	background: rgba(255,255,255,0.9);
+}
+
+.asset-stats {
+	margin-left: 20px;
+	font-size: 50%;
+}
+
+#asset-stats-objects,#asset-stats-faces {
+	font-size: 110%;
+}
+
+

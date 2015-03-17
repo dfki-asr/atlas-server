@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<!--
+ This file is part of ATLAS. It is subject to the license terms in
+ the LICENSE file found in the top-level directory of this distribution.
+ (Also avialable at http://www.apache.org/licenses/LICENSE-2.0.txt)
+ You may not use this file except in compliance with the License.
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Asset Viewer</title>
+
+		<!-- CSS -->
+		<link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+		<link href="css/style.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1">
+					<div class="page-header">
+						<h2>
+							Atlas
+							<small>
+								Carrying the weight of your assets
+							</small>
+						</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="margin-bottom: 30px;">
+				<div class="col-md-8 col-md-offset-2">
+					<ul class="nav nav-tabs nav-justified" role="tablist">
+						<li><a href="index.html">Assets</a></li>
+						<li><a href="upload.html">Upload</a></li>
+						<li class="active"><a href="#">Help</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+					<div>
+						<h2>
+							Limitations
+						</h2>
+						<p>
+							Currently the asset server always assumes models are supplied with the Y axis as the UP axis,
+							with positive Z going into the screen. This mirrors XML3D and most 3D modeling programs,
+							but NOT most 3D CAD programs which tend to use Z-UP.
+						</p>
+						<h3>
+							Limitations of COLLADA export
+						</h3>
+						<ul>
+							<li>
+								The COLLADA files supplied by the server are <strong>always</strong> Y-UP with 1 unit = 1 meter.
+								If you want your models to be stored properly please make sure they follow this convention (fyi. Blender uses Z-UP).
+							</li>
+							<li>
+								COLLADA files supplied by the server are based on COLLADA version 1.5.0
+							</li>
+							<li>
+								Currently only the Phong shading model is supported
+							</li>
+							<li>
+								Currently does not support embedded textures
+							</li>
+							<li>
+								Currently does not support sub-folders in the zip file
+							</li>
+							<li>
+								Does not support lights or cameras. Support for lights is planned for a future version.
+							</li>
+						</ul>
+						<h3>
+							Limitations of XML3D export
+						</h3>
+						<ul>
+							<li>
+								Assets are delivered in the XFlow Asset XML format only.
+							</li>
+							<li>
+								Currently only the Phong shading model is supported.
+							</li>
+							<li>
+								All textures currently use wrapS="repeat" and wrapT="repeat". This means textures are tiled.
+							</li>
+						</ul>
+						<h3>Import Limitations</h3>
+						<ul>
+							<li>
+								Both Zip files and single COLLADA files are supported.
+							</li>
+							<li>
+								Embedded textures are not supported. Textures should be included in a Zip alongside the COLLADA file and referenced by relative paths.
+							</li>
+							<li>
+								Only COLLADA and AutomationML are currently supported as source formats.
+							</li>
+							<li>
+								Cinema 4D's COLLADA v1.5 exporter is not currently supported (bug in Assimp). As a workaround choose Export Collada 1.4.
+							</li>
+							<li>
+								The first COLLADA file found in the zip's root folder will be the only one imported. There is one exception to this rule:
+							</li>
+							<li>
+								If the root folder of the .zip contains an AutomationML file (.aml) it will be chosen over any other files.
+							</li>
+							<li>
+								COLLADA files may not reference other COLLADA files. If this is needed please use an AutomationML file instead.
+							</li>
+							<li>
+								Textures can be in subfolders inside the .zip archive. COLLADA files referenced by AutomationML files may also be in subfolders.
+							</li>
+						</ul>
+					</div>
+					<div>
+						<h2>
+							Content Negotiation
+						</h2>
+						<blockquote class="blockquote-reverse blockquote-borderColor">
+							<p>Different clients need different formats in order to run effectively.</p>
+							<footer>RESTful Java with JAX-RS 2.0 p.125, Bill Burke, O'Reilly 2014</footer>
+						</blockquote>
+						<h3>
+							New MIME Types
+						</h3>
+						<p>
+							Since Content Negotiation works mostly via MIME-Type, we need to define some more mime types (where none exist).
+							The general pattern is to choose the appropriate prefix (in our case, this will be mostly model/),
+							then add a vnd.MYVENDOR (the vnd stands for vendor-defined); optionally some denoting suffixes,
+							and finally an optional +TRANSFERFORMAT denotion, if multiple are available. [1, p.136]
+							The newly defined mimetypes all follow this schema. See the following table.
+						</p>
+						<table class="table">
+							<tbody>
+								<tr>
+									<td class="bright-green"><strong>Format</strong></td>
+									<td class="bright-green"><strong>MIME Type</strong></td>
+									<td class="bright-green"><strong>File Extension</strong></td>
+								</tr>
+<!--								<tr>
+									<td>XML3D-in-HTML</td>
+									<td>application/xhtml+xml</td>
+									<td>.xhtml</td>
+								</tr>
+								<tr>
+									<td>XML3D (all inline)</td>
+									<td>model/vnd.xml3d+xml</td>
+									<td>.xml3d</td>
+								</tr>-->
+								<tr>
+									<td>XFlow Model</td>
+									<td>model/vnd.xml3d.model+xml</td>
+									<td>.xml </td>
+								</tr>
+<!--								<tr>
+									<td>XML3D Mesh JSON</td>
+									<td>model/vnd.xml3d.model+json</td>
+									<td>.json</td>
+								</tr>
+								<tr>
+									<td>Buffer (vertex etc.)</td>
+									<td>application/octet-stream</td>
+									<td>.bin</td>
+								</tr>
+								<tr>
+									<td>Mesh-in-BLAST</td>
+									<td>model/vnd.xml3d.model+blast</td>
+									<td>.blast</td>
+								</tr>
+								<tr>
+									<td>COLLADA</td>
+									<td>model/collada+xml</td>
+									<td>.dae</td>
+								</tr>-->
+								<tr>
+									<td>Collada-in-Zip</td>
+									<td>application/zip</td>
+									<td>.zip</td>
+								</tr>
+								<tr>
+									<td>AutomationML-in-Zip</td>
+									<td>application/zip</td>
+									<td>.zip</td>
+								</tr>
+								<tr>
+									<td>JPEG</td>
+									<td>image/jpeg</td>
+									<td>.jpeg</td>
+								</tr>
+								<tr>
+									<td>PNG</td>
+									<td>image/png</td>
+									<td>.png</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div>
+						<h2>
+							REST API
+						</h2>
+						<h3>
+							Asset
+						</h3>
+						<p>
+							Base URL for Assets: <code>http://server:port/atlas/rest/asset/</code>
+						</p>
+						<h5>GET</h5>
+						<p>
+							Get a JSON List of all available Assets: <code>http://server:port/atlas/rest/asset/</code>
+							<br>
+							Get a single Asset, identified via its name. For more information about extension and formats see Content Negotiation.<br>
+							<code>http://server:port/atlas/rest/asset/{assetName}.{extension}</code>
+						</p>
+						<h5>PUT</h5>
+						<p>
+							PUT an Asset as "application/zip". The asset name must be provided when putting a new asset, the full URL should look like:<br>
+							<code>http://server:port/atlas/rest/asset/{assetName}</code>
+						</p>
+						<h3>
+							Transactions
+						</h3>
+						<p>
+							Base-URL for transactions: <code>http://server:port/atlas/rest/transaction/</code>
+						</p>
+						<h5>GET</h5>
+						<p>
+							Get a single transaction, specified via its id:
+							<code>http://server:port/atlas/rest/transacation/{assetName}/{transactionId}</code><br>
+						</p>
+						<h3>Full Documentation</h3>
+						To view a full documentation of the REST Api, refer to the generated <a target="_blank" href="swaggerdoc.html">Swagger documentation</a>.
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1 footer">
+					[1] RESTful Java with JAX-RS 2.0, Bill Burke, O'Reilly 2014
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<!-- Script Libs-->
+	<script src="js/lib/jquery-2.1.1/jquery-2.1.1.js"></script>
+	<script src="js/lib/bootstrap-3.2.0/bootstrap.js"></script>
+</html>

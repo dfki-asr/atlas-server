@@ -1,0 +1,8 @@
+.DS_Store
+.metadata/
+.idea/
+nb-configuration.xml
+nbactions.xml
+nbactions-develop.xml
+jboss-web.xml
+/target/
