@@ -1,0 +1,12 @@
+language: java
+
+before_install:
+  - git clone https://github.com/dfki-asr/collada-jaxb.git
+  - cd collada-jaxb
+  - mvn install
+  - cd ..
+  - git clone https://github.com/dfki-asr/xml3d-jaxb.git
+  - cd xml3d-jaxb
+  - git checkout develop
+  - mvn install
+
