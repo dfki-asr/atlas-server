@@ -9,4 +9,5 @@ before_install:
   - cd xml3d-jaxb
   - git checkout develop
   - mvn install
+  - cd ..
 
