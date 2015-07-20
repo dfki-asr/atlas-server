@@ -57,7 +57,7 @@ public class XML3DMeshExporter {
 		Folder materialFolder = findMaterialFolderForMeshFolder(folder);
 		if(materialFolder != null){
 			String shaderId = addShaderToDefs(materialFolder);
-			mesh.setShader("#" + shaderId);
+			mesh.setMaterial("#" + shaderId);
 		} else {
 			log.warn("Did not find material for mesh node " + folder.getName());
 		}
