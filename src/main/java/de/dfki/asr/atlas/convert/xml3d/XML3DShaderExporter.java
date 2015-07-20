@@ -12,11 +12,10 @@ import de.dfki.asr.atlas.model.Asset;
 import de.dfki.asr.atlas.model.Blob;
 import de.dfki.asr.atlas.model.Color3D;
 import de.dfki.asr.atlas.model.Folder;
-import de.dfki.asr.atlas.model.Material;
 import de.dfki.asr.xml3d.jaxb.FloatList;
 import de.dfki.asr.xml3d.jaxb.FloatValue;
 import de.dfki.asr.xml3d.jaxb.Image;
-import de.dfki.asr.xml3d.jaxb.Shader;
+import de.dfki.asr.xml3d.jaxb.Material;
 import de.dfki.asr.xml3d.jaxb.Texture;
 import java.net.URI;
 import java.util.Map;
@@ -29,7 +28,7 @@ public class XML3DShaderExporter {
 	private final Logger log = LoggerFactory.getLogger(XML3DShaderExporter.class);
 	protected Asset asset;
 	protected AssetManager manager;
-	protected Shader shader;
+	protected Material shader;
 	protected ExportContext context;
 
 	public XML3DShaderExporter(ExportContext context) {
@@ -38,8 +37,8 @@ public class XML3DShaderExporter {
 		this.context = context;
 	}
 
-	public Shader exportShader(Folder materialFolder){
-		shader = new Shader();
+	public Material exportShader(Folder materialFolder){
+		shader = new Material();
 		processMaterialBlobsForFolder(materialFolder);
 		for (Folder child : materialFolder.getChildFolders()) {
 			processTextureBlobsForFolder(child);
@@ -80,7 +79,7 @@ public class XML3DShaderExporter {
 	}
 
 	private void fillPhongProperties(Blob blob) {
-		Material mat = Material.fromInputStream(blob.getData());
+		de.dfki.asr.atlas.model.Material mat = de.dfki.asr.atlas.model.Material.fromInputStream(blob.getData());
 		shader.setAmbientIntensity(new FloatValue("ambientIntensity", mat.ambient.getLuminosity()));
 		shader.setShininess(new FloatValue("shininess", mat.shininess));
 		shader.setEmissiveColor(convertToXML3DColor("emissiveColor", mat.emissive));
@@ -93,10 +92,10 @@ public class XML3DShaderExporter {
 		String shadingModel = materialFolder.getAttribute("shadingModel");
 		switch(shadingModel){
 			case "phong":
-				shader.setScript(Shader.PHONG);
+				shader.setScript(Material.PHONG);
 				break;
 			case "flat":
-				shader.setScript(Shader.FLAT);
+				shader.setScript(Material.FLAT);
 				break;
 			case "blinn":
 			case "cookTorrance":
@@ -107,7 +106,7 @@ public class XML3DShaderExporter {
 			case "orenNayar":
 			case "toon":
 				log.warn("Shader model '"+shadingModel+"' known, but not supported in XML3D. Falling back to Phong.");
-				shader.setScript(Shader.PHONG);
+				shader.setScript(Material.PHONG);
 				break;
 			default:
 				log.error("Encountered unknown shader type:" + shadingModel + ". You changed the import pipeline, didn't you?");

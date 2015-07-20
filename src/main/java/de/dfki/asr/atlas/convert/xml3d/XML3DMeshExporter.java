@@ -9,7 +9,7 @@ package de.dfki.asr.atlas.convert.xml3d;
 import de.dfki.asr.xml3d.jaxb.Assetmesh;
 import de.dfki.asr.xml3d.jaxb.FloatList;
 import de.dfki.asr.xml3d.jaxb.Defs;
-import de.dfki.asr.xml3d.jaxb.Shader;
+import de.dfki.asr.xml3d.jaxb.Material;
 import de.dfki.asr.xml3d.jaxb.IntList;
 import de.dfki.asr.atlas.business.AssetManager;
 import de.dfki.asr.atlas.convert.ExportContext;
@@ -182,7 +182,7 @@ public class XML3DMeshExporter {
 		}
 		String materialId = generateShaderId(materialName);
 		XML3DShaderExporter shaderExporter = new XML3DShaderExporter(context);
-		Shader shader = shaderExporter.exportShader(materialFolder);
+		Material shader = shaderExporter.exportShader(materialFolder);
 		shader.setId(materialId);
 		defs.getShaders().add(shader);
 		addedShaders.put(materialName, materialId);
