@@ -38,6 +38,10 @@ public class SubassetListingExporter implements ExportOperation<ListingFolder>{
 			parentAsset.getChildren().add(subasset);
 			for (Folder child : currentFolder.getChildFolders()) {
 				convertFolder(child, subasset);
+				if (child.getType().equals("mesh")) {
+					// any mesh triggers flag
+					subasset.setHasGeometry(true);
+				}
 			}
 		}
 	}

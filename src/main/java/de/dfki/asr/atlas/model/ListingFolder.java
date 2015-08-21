@@ -26,8 +26,20 @@ public class ListingFolder implements Serializable {
 	@JsonProperty
 	protected List<ListingFolder> children;
 
+	@JsonProperty
+	protected boolean hasGeometry;
+
+	public boolean hasGeometry() {
+		return hasGeometry;
+	}
+
+	public void setHasGeometry(boolean hasGeometry) {
+		this.hasGeometry = hasGeometry;
+	}
+
 	public ListingFolder() {
 		children = new ArrayList<>();
+		hasGeometry = false;
 	}
 
 	public String getName() {
