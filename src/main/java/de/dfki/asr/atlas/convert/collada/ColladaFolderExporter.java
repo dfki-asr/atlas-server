@@ -118,7 +118,6 @@ public class ColladaFolderExporter implements ExportOperation<SimpleCOLLADADocum
 	}
 
 	private void setNodeProperties(NodeType node, Folder folder) {
-		node.setId(folder.getName());
 		node.setName(folder.getName());
 		node.setType(NodeEnum.NODE);
 	}
