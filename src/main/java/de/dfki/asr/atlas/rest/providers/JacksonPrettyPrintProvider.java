@@ -23,10 +23,8 @@ public class JacksonPrettyPrintProvider implements ContextResolver<ObjectMapper>
 		mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 	}
 
-
 	@Override
 	public ObjectMapper getContext(Class<?> type) {
 		return mapper;
 	}
-	
 }
