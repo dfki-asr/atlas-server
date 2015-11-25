@@ -232,7 +232,7 @@ Add the ATLAS jms destinations to the JMS destinations of the HornetQ messaging 
 Increasing the memory limit
 -----------------------------
 
-To increase the amount of memory available for ATLAS, open the configuration file `bin/standalone.conf` located in you WildFly installation's . Go to the the options to be passed to the Java VM.
+To increase the amount of memory available for ATLAS, open the configuration file `bin/standalone.conf` (or `bin/standalone.conf.bat` on Windows systems) located in you WildFly installation's. Go to the the options to be passed to the Java VM.
 The memory maximum can be adjusted in the line
 
 	JAVA_OPTS="-Xms64m -Xmx512m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true"
