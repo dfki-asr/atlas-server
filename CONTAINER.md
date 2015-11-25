@@ -1,14 +1,14 @@
 Setting up the container
 ===================
 
-Currently, we support [WildFly](http://www.wildfly.org) as container only.
+Currently, we support [WildFly](http://www.wildfly.org) 8.2.0 Final as container only.
 JavaEE portability is a difficult terrain, and we do not have the resources to manoeuvre around this.
 We're sorry for the inconvenience.
 
 Download and extract WildFly
 ----------------------------
 
-Download the most recent version of [Wildfly](http://www.wildfly.org) and extract the archive to a folder on your disk.
+Download [WildFly 8.2.0.Final](http://www.wildfly.org/downloads/) and extract the archive to a folder on your disk.
 
 ### Set up a management user
 
