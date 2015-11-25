@@ -37,7 +37,9 @@ Install modeshape
 -------------------
 
 To store asset data, ATLAS uses the JCR (Java Content Repository) interface.
-Follow the instructions for [installing](https://docs.jboss.org/author/display/MODE40/Installing+ModeShape+into+Wildfly) and [configuring](https://docs.jboss.org/author/display/MODE40/Configuring+ModeShape+in+Wildfly) modeshape in wildfly.
+The JCR implementation for WildFly is called ModeShape, which is what we are going to install and configure here.
+
+Detailed instructions for [installation](https://docs.jboss.org/author/display/MODE40/Installing+ModeShape+into+Wildfly) and [configuration](https://docs.jboss.org/author/display/MODE40/Configuring+ModeShape+in+Wildfly) can be found on the ModeShape site.
 
 ### Add modeshape user configuration
 
