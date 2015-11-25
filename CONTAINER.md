@@ -10,6 +10,9 @@ Download and extract WildFly
 
 Download [WildFly 8.2.0.Final](http://www.wildfly.org/downloads/) and extract the archive to a folder on your disk.
 
+Adding users to WildFly
+-----------------------
+
 ### Set up a management user
 
 In order to manage the server via the web interface, add a new user via the wildfly CLI, as follows.
