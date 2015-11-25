@@ -5,6 +5,19 @@ Currently, we support [WildFly](http://www.wildfly.org) 8.2.0 Final as container
 JavaEE portability is a difficult terrain, and we do not have the resources to manoeuvre around this.
 We're sorry for the inconvenience.
 
+Quick start
+-----------
+
+Not all of the information in this file is necessary to get started with ATLAS.
+At the bare minimum, you need to take the following steps:
+
+* Download WildFly
+* [Download and integrate ModeShape](#download-and-integrate-modeshape)
+* Use the supplied [example WildFly configuration](#using-the-example-wildfly-configuration)
+* Add the [messaging user](#set-up-a-user-for-messaging)
+* [Deploy ATLAS](#deploying-the-application)
+
+
 Download and extract WildFly
 ----------------------------
 
