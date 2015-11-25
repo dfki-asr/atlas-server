@@ -240,6 +240,20 @@ The memory maximum can be adjusted in the line
 
 	JAVA_OPTS="-Xms64m -Xmx512m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true"
 
-by increasing the `-Xmx`, `-Xms` and `-XX:MaxPermSize`  value.
+by increasing the `-Xmx`, `-Xms` and `-XX:MaxPermSize` value.
 
 Since ATLAS probably needs to serialise large amounts of binary data to text, which requires a decent amount of memory, you are encouraged to adjust the default values. At any rate, the container log will tell you when you run out of memory.
+
+Deploying the application
+-------------------------
+
+Once the container is configured, you can deploy the ATLAS WAR.
+After compilation (see the [README file](README.md)), you can find this file in the `target/` directory in your source folder.
+
+To deploy the application, WildFly needs to be running.
+Unless it already is, start the `standalone` script in WildFly's `bin` folder.
+Once the container is running, it should suffice to copy the EAR archive to the `standalone/deployments/` folder of WildFly.
+
+After allowing the container some time to bring up all the classes and services needed for ATLAS,
+it should be available from your container's `atlas/` context.
+With the configuration supplied, you can reach this via `http://localhost:8080/atlas/`.
