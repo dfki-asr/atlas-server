@@ -10,6 +10,18 @@ Download and extract WildFly
 
 Download [WildFly 8.2.0.Final](http://www.wildfly.org/downloads/) and extract the archive to a folder on your disk.
 
+Using the example WildFly configuration
+---------------------------------------
+
+To shorten startup times we've included a set of configuration files in this repository.
+It includes the data storage and messaging configuration detailed in the rest of this document.
+
+Copy the contents of the `example-configuration` directory to your WildFly `standalone/configuration/` directory.
+You may need to overwrite the existing file there.
+
+If you need to run something else apart from ATLAS on your WildFly, you probably need to configure some other things.
+The detailed changes necessary can be found in the rest of this document.
+
 Adding users to WildFly
 -----------------------
 
