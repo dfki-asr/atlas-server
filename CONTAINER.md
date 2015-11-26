@@ -1,14 +1,42 @@
 Setting up the container
 ===================
 
-Currently, we support [WildFly](http://www.wildfly.org) as container only.
+Currently, we support [WildFly](http://www.wildfly.org) 8.2.0 Final as container only.
 JavaEE portability is a difficult terrain, and we do not have the resources to manoeuvre around this.
 We're sorry for the inconvenience.
+
+Quick start
+-----------
+
+Not all of the information in this file is necessary to get started with ATLAS.
+At the bare minimum, you need to take the following steps:
+
+* Download WildFly
+* [Download and integrate ModeShape](#download-and-integrate-modeshape)
+* Use the supplied [example WildFly configuration](#using-the-example-wildfly-configuration)
+* Add the [messaging user](#set-up-a-user-for-messaging)
+* [Deploy ATLAS](#deploying-the-application)
+
 
 Download and extract WildFly
 ----------------------------
 
-Download the most recent version of [Wildfly](http://www.wildfly.org) and extract the archive to a folder on your disk.
+Download [WildFly 8.2.0.Final](http://www.wildfly.org/downloads/) and extract the archive to a folder on your disk.
+
+Using the example WildFly configuration
+---------------------------------------
+
+To shorten startup times we've included a set of configuration files in this repository.
+It includes the data storage and messaging configuration detailed in the rest of this document.
+
+Copy the contents of the `example-configuration` directory to your WildFly `standalone/configuration/` directory.
+You may need to overwrite the existing file there.
+
+If you need to run something else apart from ATLAS on your WildFly, you probably need to configure some other things.
+The detailed changes necessary can be found in the rest of this document.
+
+Adding users to WildFly
+-----------------------
 
 ### Set up a management user
 
@@ -37,7 +65,18 @@ Install modeshape
 -------------------
 
 To store asset data, ATLAS uses the JCR (Java Content Repository) interface.
-Follow the instructions for [installing](https://docs.jboss.org/author/display/MODE40/Installing+ModeShape+into+Wildfly) and [configuring](https://docs.jboss.org/author/display/MODE40/Configuring+ModeShape+in+Wildfly) modeshape in wildfly.
+The JCR implementation for WildFly is called ModeShape, which is what we are going to install and configure here.
+
+Detailed instructions for [installation](https://docs.jboss.org/author/display/MODE40/Installing+ModeShape+into+Wildfly) and [configuration](https://docs.jboss.org/author/display/MODE40/Configuring+ModeShape+in+Wildfly) can be found on the ModeShape site.
+However, we will summarize the essentials here.
+
+### Download and integrate ModeShape
+
+Download the [ModeShape subsystem for Wildfly 8.0 - Version 4.1.0.Final](http://modeshape.jboss.org/downloads/downloads4-1-0-final.html).
+Unzip the archive, it should contain `docs`, `domain`, `modules` and `standalone` directories.
+Copy these directories into the root of your Wildfly installation.
+This should add the files of ModeShape into the already existing directories of WildFly.
+No overwriting of files should be necessary.
 
 ### Add modeshape user configuration
 
@@ -221,11 +260,25 @@ Add the ATLAS jms destinations to the JMS destinations of the HornetQ messaging 
 Increasing the memory limit
 -----------------------------
 
-To increase the amount of memory available for ATLAS, open the configuration file `bin/standalone.conf` located in you WildFly installation's . Go to the the options to be passed to the Java VM.
+To increase the amount of memory available for ATLAS, open the configuration file `bin/standalone.conf` (or `bin/standalone.conf.bat` on Windows systems) located in you WildFly installation's. Go to the the options to be passed to the Java VM.
 The memory maximum can be adjusted in the line
 
 	JAVA_OPTS="-Xms64m -Xmx512m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true"
 
-by increasing the `-Xmx`, `-Xms` and `-XX:MaxPermSize`  value.
+by increasing the `-Xmx`, `-Xms` and `-XX:MaxPermSize` value.
 
 Since ATLAS probably needs to serialise large amounts of binary data to text, which requires a decent amount of memory, you are encouraged to adjust the default values. At any rate, the container log will tell you when you run out of memory.
+
+Deploying the application
+-------------------------
+
+Once the container is configured, you can deploy the ATLAS WAR.
+After compilation (see the [README file](README.md)), you can find this file in the `target/` directory in your source folder.
+
+To deploy the application, WildFly needs to be running.
+Unless it already is, start the `standalone` script in WildFly's `bin` folder.
+Once the container is running, it should suffice to copy the EAR archive to the `standalone/deployments/` folder of WildFly.
+
+After allowing the container some time to bring up all the classes and services needed for ATLAS,
+it should be available from your container's `atlas/` context.
+With the configuration supplied, you can reach this via `http://localhost:8080/atlas/`.
