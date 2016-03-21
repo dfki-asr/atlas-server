@@ -7,6 +7,7 @@
 package de.dfki.asr.atlas.convert.collada;
 
 import de.dfki.asr.atlas.business.AssetManager;
+import de.dfki.asr.atlas.business.FolderHasher;
 import de.dfki.asr.atlas.convert.ExportContext;
 import de.dfki.asr.atlas.model.Blob;
 import de.dfki.asr.atlas.model.Color3D;
@@ -211,6 +212,6 @@ public class ColladaMaterialExporter {
 	}
 
 	private String matrialId(Folder materialFolder) {
-		return materialFolder.getName();
+		return "hash-"+new FolderHasher(materialFolder).toString();
 	}
 }
