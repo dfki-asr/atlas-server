@@ -23,8 +23,8 @@ import java.util.TreeMap;
  *
  * An ATLAS folder hash is defined as follows:
  *
+ * create a line "# [folder.type]\n"
  * collect all child folder hashes.
- * create a line "# [foldertype]\n"
  * numerically sort the union of child folder and blob hashes.
  * if two items have the same hash, sort by type alphabetically ascending.
  * create lines from the sorted hashes: "[type] [hash]\n"
