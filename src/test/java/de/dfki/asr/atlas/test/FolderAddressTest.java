@@ -7,7 +7,6 @@
 package de.dfki.asr.atlas.test;
 
 import de.dfki.asr.atlas.model.Folder;
-import java.util.ArrayList;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,7 +19,6 @@ public class FolderAddressTest {
 	@BeforeClass
 	public void setupFolderHierarchy() {
 		rootFolder = new Folder();
-		rootFolder.setChildren(new ArrayList<Folder>());
 		firstChild = new Folder();
 		rootFolder.getChildFolders().add(firstChild);
 		firstChild.setParent(rootFolder);
@@ -29,7 +27,6 @@ public class FolderAddressTest {
 		secondChild.setParent(rootFolder);
 		grandChild = new Folder();
 		// append grandchild to second to test list ordering
-		secondChild.setChildren(new ArrayList<Folder>());
 		secondChild.getChildFolders().add(grandChild);
 		grandChild.setParent(secondChild);
 	}
