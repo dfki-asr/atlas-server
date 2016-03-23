@@ -125,6 +125,25 @@ Make sure the *security domain* you added while installing modeshape contains al
 		</authentication>
 	</security-domain>
 
+### Configure subsystem
+
+Finally, the ModeShape subsystem needs to have (at least) these things configured:
+
+* an `atlas` workspace
+* access for the `admin` role to said workspace
+* the bundled REST application needs to be enabled for the worker to function
+
+This can be achieved using the following snippet:
+
+    <subsystem xmlns="urn:jboss:domain:modeshape:2.0">
+        <repository name="atlas" anonymous-roles="admin">
+            <workspaces allow-workspace-creation="false">
+                <workspace name="default"/>
+            </workspaces>
+        </repository>
+        <webapp name="modeshape-rest.war"/>
+    </subsystem>
+
 
 Messaging configuration
 ------------------------------
