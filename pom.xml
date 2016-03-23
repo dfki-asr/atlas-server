@@ -10,7 +10,7 @@
 
 	<groupId>de.dfki.asr.assetserver</groupId>
 	<artifactId>atlas</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<packaging>war</packaging>
 
 	<name>ATLAS Web Archive</name>
@@ -74,7 +74,7 @@
 		<dependency>
 			<groupId>de.dfki.asr</groupId>
 			<artifactId>collada-jaxb</artifactId>
-			<version>1.0</version>
+			<version>1.0.1</version>
 		</dependency>
 
 		<dependency>
