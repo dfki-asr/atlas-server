@@ -125,6 +125,33 @@ Make sure the *security domain* you added while installing modeshape contains al
 		</authentication>
 	</security-domain>
 
+### Configure subsystem
+
+Finally, the ModeShape subsystem needs to have (at least) these things configured:
+
+* an `atlas` workspace
+* access for the `admin` role to said workspace
+* the bundled REST application needs to be enabled for the worker to function
+
+This can be achieved using the following snippet:
+
+    <subsystem xmlns="urn:jboss:domain:modeshape:2.0">
+        <repository name="atlas" anonymous-roles="admin">
+            <workspaces allow-workspace-creation="false">
+                <workspace name="default"/>
+            </workspaces>
+        </repository>
+        <webapp name="modeshape-rest.war"/>
+    </subsystem>
+
+### Setting the maximum upload size
+
+Since assets to be imported can be relatively large, it may be necessary to increase the maximum POST request size.
+This can be achieved by adding a `max-post-size` attribute to WildFly's http listener configuration tag, which is in the `urn:jboss:domain:undertow:1.2` subsystem.
+For example, a maximum upload size of around 4.2 GB might look like this:
+
+    <http-listener name="default" socket-binding="http" max-post-size="4515430400"/>
+
 
 Messaging configuration
 ------------------------------
