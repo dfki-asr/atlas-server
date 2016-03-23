@@ -12,16 +12,17 @@ import de.dfki.asr.xml3d.jaxb.Defs;
 import de.dfki.asr.xml3d.jaxb.Shader;
 import de.dfki.asr.xml3d.jaxb.IntList;
 import de.dfki.asr.atlas.business.AssetManager;
+import de.dfki.asr.atlas.business.FolderHasher;
 import de.dfki.asr.atlas.convert.ExportContext;
 import de.dfki.asr.atlas.convert.ExporterUtils;
 import de.dfki.asr.atlas.convert.FloatStreamIterator;
 import de.dfki.asr.atlas.convert.IntStreamIterator;
 import de.dfki.asr.atlas.model.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.collections4.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,6 @@ public class XML3DMeshExporter {
 	protected AssetManager manager;
 	protected Defs defs;
 	protected ExportContext context;
-	private final Map<String, String> addedShaders = new HashMap<>();
 	private final List<String> usedAssetmeshNames = new ArrayList<>();
 	private long id = 1;
 
@@ -82,7 +82,7 @@ public class XML3DMeshExporter {
 
 	private void addTransformMatrixToMesh(Assetmesh mesh, ArrayMatrix4f matrix) {
 		FloatList matrixFloatList = new FloatList("meshTransform");
-		matrixFloatList.setValues(matrix.asList());
+		matrixFloatList.setValues(matrix.asListColumnMajor());
 		mesh.setTransform(matrixFloatList);
 	}
 
@@ -176,34 +176,25 @@ public class XML3DMeshExporter {
 	}
 
 	private String addShaderToDefs(Folder materialFolder){
-		String materialName = materialFolder.getName();
-		if( addedShaders.containsKey(materialName) ){
-			return addedShaders.get(materialName);
+		String materialId = "shader-" + new FolderHasher(materialFolder).toString();
+		if (shaderAlreadyAdded(materialId)) {
+			return materialId;
 		}
-		String materialId = generateShaderId(materialName);
 		XML3DShaderExporter shaderExporter = new XML3DShaderExporter(context);
 		Shader shader = shaderExporter.exportShader(materialFolder);
 		shader.setId(materialId);
 		defs.getShaders().add(shader);
-		addedShaders.put(materialName, materialId);
 		return materialId;
 	}
 
-	private String generateShaderId(String materialName){
-		if( stringIsValidHTMLId(materialName) ){
-			return materialName;
-		}else{
-			return "shader_" + generateNewIDSuffix();
-		}
-	}
-
-	private boolean stringIsValidHTMLId(String str){
-		//ID must start with a letter A-Z or a-z.
-		//Furthermore use only the following: letters A-Z and a-z, numbers 0-9, undercore _ , colon : and hyphen -
-		//It must not use any other special characters
-		//We do not allow the dot character, since it breaks all jquery selectors used within xml3d
-		String regex = "[A-Za-z][A-Za-z0-9_:-]*";
-		return str.matches(regex);
+	private boolean shaderAlreadyAdded(final String shaderId) {
+		Shader existing = CollectionUtils.find(defs.getShaders(), new Predicate<Shader>() {
+			@Override
+			public boolean evaluate(Shader t) {
+				return t.getId().equals(shaderId);
+			}
+		});
+		return existing != null;
 	}
 
 	private ArrayMatrix4f readGlobalTransform(Folder folder) {

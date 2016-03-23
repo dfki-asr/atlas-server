@@ -24,17 +24,17 @@ public class Folder implements Serializable {
 	protected String type;
 
 	@JsonManagedReference
-	protected List<Folder> children;
+	protected List<Folder> children = new ArrayList<>();
 
 	@JsonBackReference
 	@Getter @Setter
 	protected Folder parent;
 
 	@JsonProperty
-	protected Map<String, String> blobs;
+	protected Map<String, String> blobs = new HashMap<>();
 
 	@JsonProperty
-	protected Map<String, String> attributes;
+	protected Map<String, String> attributes = new HashMap<>();
 
 	public void setName(String name) {
 		this.name = name;

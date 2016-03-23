@@ -7,6 +7,7 @@
 package de.dfki.asr.atlas.convert.collada;
 
 import de.dfki.asr.atlas.business.AssetManager;
+import de.dfki.asr.atlas.business.FolderHasher;
 import de.dfki.asr.atlas.convert.ExportContext;
 import de.dfki.asr.atlas.model.Blob;
 import de.dfki.asr.atlas.model.Color3D;
@@ -45,36 +46,36 @@ public class ColladaMaterialExporter {
 	}
 
 	public void exportMaterial(String assetName, Folder materialFolder, InstanceGeometryType geometryNode, SimpleCOLLADADocument document, String materialSymbol) {
-		String materialName = materialFolder.getName();
+		String materialId = matrialId(materialFolder);
 		this.geometryNode = geometryNode;
 		this.assetName = assetName;
 		this.document = document;
-		if (!materialAlreadyInLibrary(materialName)) {
-			createEnclosingTags(materialName);
+		if (!materialAlreadyInLibrary(materialId)) {
+			createEnclosingTags(materialId);
 			addPhongType(materialFolder);
-			addMaterialToLibrary(materialFolder);
+			addMaterialToLibrary(materialFolder, materialId);
 			addEffectToLibrary();
 		}
-		addMaterialReferenceToGeometry(materialFolder, materialSymbol);
+		addMaterialReferenceToGeometry(materialId, materialSymbol);
 	}
 
 
-	private void createEnclosingTags(String materialName) {
+	private void createEnclosingTags(String materialId) {
 		effect = new EffectType();
 		profile = new ProfileCommonType();
 		technique = new Technique();
 		profile.setTechnique(technique);
 
-		effect.setId(materialName + "-effect");
+		effect.setId(materialId + "-effect");
 		effect.getProfileCOMMONsAndProfileBRIDGEsAndProfileGLES2s().add(profile);
 	}
 
-	private void addMaterialReferenceToGeometry(Folder materialFolder, String materialSymbol) {
+	private void addMaterialReferenceToGeometry(String materialId, String materialSymbol) {
 		BindMaterialType bind = new BindMaterialType();
 		BindMaterialType.TechniqueCommon matTechnique = new BindMaterialType.TechniqueCommon();
 		InstanceMaterialType matRef = new InstanceMaterialType();
 		matRef.setSymbol(materialSymbol);
-		matRef.setTarget("#" + materialFolder.getName());
+		matRef.setTarget("#" + materialId);
 		matTechnique.getInstanceMaterials().add(matRef);
 		bind.setTechniqueCommon(matTechnique);
 		geometryNode.setBindMaterial(bind);
@@ -84,13 +85,12 @@ public class ColladaMaterialExporter {
 		document.getLibrary(LibraryEffectsType.class).getEffects().add(effect);
 	}
 
-	private void addMaterialToLibrary(Folder materialFolder) {
-		String matName = materialFolder.getName();
+	private void addMaterialToLibrary(Folder materialFolder, String materialId) {
 		MaterialType mat = new MaterialType();
-		mat.setId(matName);
-		mat.setName(matName);
+		mat.setId(materialId);
+		mat.setName(materialFolder.getName());
 		InstanceEffectType instanceEffect = new InstanceEffectType();
-		instanceEffect.setUrl("#" + matName + "-effect");
+		instanceEffect.setUrl("#" + materialId + "-effect");
 		mat.setInstanceEffect(instanceEffect);
 		document.getLibrary(LibraryMaterialsType.class).getMaterials().add(mat);
 	}
@@ -200,14 +200,18 @@ public class ColladaMaterialExporter {
 		return colorType;
 	}
 
-	private boolean materialAlreadyInLibrary(final String materialName) {
+	private boolean materialAlreadyInLibrary(final String materialId) {
 		List<MaterialType> mats = document.getLibrary(LibraryMaterialsType.class).getMaterials();
 		MaterialType mat = CollectionUtils.find(mats, new Predicate<MaterialType>() {
 			@Override
 			public boolean evaluate(MaterialType t) {
-				return t.getId().equals(materialName);
+				return t.getId().equals(materialId);
 			}
 		});
 		return (mat != null);
+	}
+
+	private String matrialId(Folder materialFolder) {
+		return "hash-"+new FolderHasher(materialFolder).toString();
 	}
 }
