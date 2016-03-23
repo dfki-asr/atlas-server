@@ -21,10 +21,25 @@ public class ListingFolder implements Serializable {
 	protected String url;
 
 	@JsonProperty
+	protected ArrayMatrix4f transform;
+
+	@JsonProperty
 	protected List<ListingFolder> children;
+
+	@JsonProperty
+	protected boolean hasGeometry;
+
+	public boolean hasGeometry() {
+		return hasGeometry;
+	}
+
+	public void setHasGeometry(boolean hasGeometry) {
+		this.hasGeometry = hasGeometry;
+	}
 
 	public ListingFolder() {
 		children = new ArrayList<>();
+		hasGeometry = false;
 	}
 
 	public String getName() {
@@ -41,6 +56,14 @@ public class ListingFolder implements Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public ArrayMatrix4f getTransform() {
+		return transform;
+	}
+
+	public void setTransform(ArrayMatrix4f transform) {
+		this.transform = transform;
 	}
 
 	public List<ListingFolder> getChildren() {

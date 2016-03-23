@@ -82,7 +82,7 @@ public class XML3DMeshExporter {
 
 	private void addTransformMatrixToMesh(Assetmesh mesh, ArrayMatrix4f matrix) {
 		FloatList matrixFloatList = new FloatList("meshTransform");
-		matrixFloatList.setValues(matrix.asList());
+		matrixFloatList.setValues(matrix.asListColumnMajor());
 		mesh.setTransform(matrixFloatList);
 	}
 
