@@ -43,15 +43,12 @@ by running inside a JavaEE container.
 Features
 --------
 
-Import formats:
-
-* COLLADA
-* AutomationML (incomplete)
-
 Export formats:
 
-* COLLADA
+* COLLADA 1.5
 * XML3D 4.2 Asset format
+
+For information on the available import formats, see the README.md of atlas-worker.
 
 
 Repository structure
