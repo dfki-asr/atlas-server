@@ -10,7 +10,7 @@
 
 	<groupId>de.dfki.asr.assetserver</groupId>
 	<artifactId>atlas</artifactId>
-	<version>1.2.3-SNAPSHOT</version>
+	<version>1.2.3</version>
 	<packaging>war</packaging>
 
 	<name>ATLAS Web Archive</name>
@@ -28,6 +28,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<swagger.templateDirectory>${basedir}/src/swagger/templates</swagger.templateDirectory>
 		<swagger.target>${project.build.directory}/${project.build.finalName}</swagger.target>
+		<jackson.version>2.9.7</jackson.version>
 	</properties>
 
 	<dependencies>
@@ -124,13 +125,13 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>2.4.3</version>
+			<version>${jackson.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.4.3</version>
+			<version>${jackson.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
